@@ -1,4 +1,4 @@
-[![MasterHead](https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fc.tenor.com%2FViTJnMMosLQAAAAC%2Fanime-typing.gif&f=1&nofb=1&ipt=c1276d17fbbc09d53fa746d552524f2eb5e15a0b342dcc5018403db43ab3bab2&ipo=images)](https://rishavchanda.io)
+[![MasterHead]([https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fc.tenor.com%2FViTJnMMosLQAAAAC%2Fanime-typing.gif&f=1&nofb=1&ipt=c1276d17fbbc09d53fa746d552524f2eb5e15a0b342dcc5018403db43ab3bab2&ipo=images)](https://rishavchanda.io](https://i.pinimg.com/originals/0b/5c/c0/0b5cc024841accd9a31a7b2daeb0e57b.gif))
 <h1 align="center">Hi 👋, I'm Suraj Gurung</h1>
 <h3 align="center">1st Year IT student</h3>
 <img align="right" alt="Coding" width="400" src="https://media3.giphy.com/media/QHE5gWI0QjqF2/giphy.gif?cid=ecf05e47n9hil36iu8mmc5fty6tc0zualiclewpf2iogp4uz&rid=giphy.gif&ct=g”>
