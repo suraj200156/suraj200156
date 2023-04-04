@@ -1,16 +1,15 @@
 
 def main():
-    print("shop name")
+    print("Your message")
     while True:
         print("menu")
         try:
             rawInput = int(input("Enter any number from 1 to 4: "))
             if (rawInput == 1):
- 
                 print("display")
 
             elif (rawInput == 2):
-                  print("order")
+                print("order")
                
             elif (rawInput == 3):
                 print("sell") 
@@ -23,7 +22,6 @@ def main():
                                   
         except ValueError:
             print("Please input a valid number from the menu......  ")
-
 
 if __name__ == '__main__':
     main()
