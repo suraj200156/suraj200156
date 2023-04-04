@@ -1,27 +1,34 @@
+from order import order
+from sell import sell
+from stocks import laptops
+
 
 def main():
-    print("Your message")
+    print("Your Message")
     while True:
-        print("menu")
+        print("1.display laptop, 2.sell, 3.order, 4.exit")
         try:
-            rawInput = int(input("Enter any number from 1 to 4: "))
-            if (rawInput == 1):
-                print("display")
+            X = int(input("enter any number from 1 to 4: "))
+            if (X == 1):
+               laptops()
 
-            elif (rawInput == 2):
-                print("order")
-               
-            elif (rawInput == 3):
-                print("sell") 
-               
-            elif (rawInput == 4):
-                print("exit")
- 
+            elif (X == 2):
+                order()
+                break
+
+            elif (X == 3):
+                sell()
+                break
+
+            elif (X == 4):
+                print("Exit")
+                break
             else:
-               print("The number you have entered is not in the menu..... ")
-                                  
+                print("select 1 to 4")
+
         except ValueError:
-            print("Please input a valid number from the menu......  ")
+            print("select int")
+
 
 if __name__ == '__main__':
     main()
