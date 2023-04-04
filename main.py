@@ -27,7 +27,7 @@ def main():
                 print("select 1 to 4")
 
         except ValueError:
-            print("select int")
+            print("select int") 
 
 
 if __name__ == '__main__':
