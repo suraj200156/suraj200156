@@ -1,0 +1,103 @@
+#include <WiFi.h>
+#include <ESPAsyncWebServer.h>
+#include <ESP32Servo.h>
+
+const char* ssid = "SurajGurung@ClassicTech";
+const char* password = "Nepal123456";
+
+Servo myservo;
+AsyncWebServer server(80);
+
+int servoPosition = 0; 
+
+void setup() {
+  Serial.begin(115200);
+  
+
+  // Wifi
+  
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(1000);
+    Serial.println("Connecting to WiFi...");
+  }
+  Serial.println("Connected to WiFi");
+
+  myservo.attach(13);
+  
+
+  // Website
+
+  
+  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
+    String html = R"(
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>DOG FEEDER</title>
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+          }
+          h1 {
+            color: #333;
+            font-size: 24px;
+          }
+          button {
+            font-size: 20px;
+            padding: 15px 30px;
+            margin: 10px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+          }
+        </style>
+      </head>
+      <body>
+        <h1>DOG FEEDER</h1>
+        <button onclick='rotateServo()'>Feed</button>
+        <script>
+          function rotateServo() {
+            var xhttp = new XMLHttpRequest();
+            xhttp.open('GET', '/rotate', true);
+            xhttp.send();
+          }
+        </script>
+      </body>
+      </html>
+    )";
+
+    request->send(200, "text/html", html);
+  });
+  
+
+  // Handle the "/rotate" path to rotate the servo
+
+  
+  server.on("/rotate", HTTP_GET, [](AsyncWebServerRequest *request){
+    rotateServo();
+    request->send(200, "text/plain", "OK");
+  });
+
+
+  server.begin();
+
+  rotateServo();  
+}
+
+void loop() {
+ 
+}
+
+void rotateServo() {
+  myservo.write(180);  
+  delay(500);         
+  myservo.write(0);    
+  delay(15);           
+}
