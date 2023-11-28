@@ -1,0 +1,54 @@
+#include <ESP32Servo.h>
+#include <WiFi.h>
+#include <ESPAsyncWebServer.h>
+
+const char* ssid = "SurajGurung@ClassicTech";
+const char* password = "Nepal123456";
+
+
+const int servoPin = 13; // Replace with your servo motor pin
+
+Servo myServo;
+
+const char* htmlPage = "<html><body><button onclick=\"rotateServo()\">Rotate Servo</button><script>function rotateServo(){fetch('/rotate');}</script></body></html>";
+
+AsyncWebServer server(80);
+
+void setup() {
+  Serial.begin(115200);
+
+  myServo.attach(servoPin);
+
+  // Connect to Wi-Fi
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(1000);
+    Serial.println("Connecting to WiFi...");
+  }
+  Serial.println("Connected to WiFi");
+
+  // Define routes
+  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(200, "text/html", htmlPage);
+  });
+
+  server.on("/rotate", HTTP_GET, [](AsyncWebServerRequest *request){
+    rotateServo();
+    request->send(200, "text/plain", "Servo rotated");
+  });
+
+  // Start server
+  server.begin();
+}
+
+void loop() {
+  // Your code here, if needed
+}
+
+void rotateServo() {
+  // Add your servo rotation logic here
+  myServo.write(180); // Example: rotate to 90 degrees
+  delay(1000); // Add delay if necessary
+  myServo.write(0); // Example: rotate back to 0 degrees
+}
+
