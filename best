@@ -1,25 +1,18 @@
-#include <ESP32Servo.h>
 #include <WiFi.h>
-#include <ESPAsyncWebServer.h>
+#include <HTTPClient.h>
 
 const char* ssid = "SurajGurung@ClassicTech";
 const char* password = "Nepal123456";
 
+const char* apiKey = "AIzaSyAsNLbKDcQH8gHvrvGVY9FmZCjKpzJT71Y";
+const char* databaseUrl = "https://petfeeder-75dd9-default-rtdb.asia-southeast1.firebasedatabase.app/";
 
-const int servoPin = 13; // Replace with your servo motor pin
-
-Servo myServo;
-
-const char* htmlPage = "<html><body><button onclick=\"rotateServo()\">Rotate Servo</button><script>function rotateServo(){fetch('/rotate');}</script></body></html>";
-
-AsyncWebServer server(80);
+const int trigPin = 13; 
+const int echoPin = 12;
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
 
-  myServo.attach(servoPin);
-
-  // Connect to Wi-Fi
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
     delay(1000);
@@ -27,28 +20,50 @@ void setup() {
   }
   Serial.println("Connected to WiFi");
 
-  // Define routes
-  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send(200, "text/html", htmlPage);
-  });
-
-  server.on("/rotate", HTTP_GET, [](AsyncWebServerRequest *request){
-    rotateServo();
-    request->send(200, "text/plain", "Servo rotated");
-  });
-
-  // Start server
-  server.begin();
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
 }
 
 void loop() {
-  // Your code here, if needed
-}
+  // Trigger the ultrasonic sensor by sending a 10 microsecond pulse
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
 
-void rotateServo() {
-  // Add your servo rotation logic here
-  myServo.write(180); // Example: rotate to 90 degrees
-  delay(1000); // Add delay if necessary
-  myServo.write(0); // Example: rotate back to 0 degrees
-}
+  // Measure the duration of the echo pulse
+  long duration = pulseIn(echoPin, HIGH);
 
+  // Calculate the distance based on the speed of sound (343 meters/second)
+  // and the formula: distance = (duration * speed of sound) / 2
+  int distance = duration * 0.0343 / 2;
+
+  // Create JSON data to send to the Firebase Realtime Database
+  String jsonData = "{ \"distance\": " + String(distance) + " }";
+
+  // Create an HTTPClient object
+  HTTPClient http;
+
+  // Construct the URL to the Firebase Realtime Database
+  String firebaseUrl = String(databaseUrl) + ".json?auth=" + String(apiKey);
+
+  // Make a PUT request to the Firebase Realtime Database to overwrite the old data
+  http.begin(firebaseUrl);
+  http.addHeader("Content-Type", "application/json");
+  int httpResponseCode = http.PUT(jsonData);
+
+  // Check the response
+  if (httpResponseCode == 200) {
+    Serial.println("Data successfully sent to the Firebase Realtime Database");
+  } else {
+    Serial.print("Error: ");
+    Serial.println(httpResponseCode);
+    Serial.println(http.getString());
+  }
+
+  http.end();
+
+  // Wait for a short time before taking the next measurement
+  delay(500);
+}
